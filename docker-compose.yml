@@ -14,14 +14,19 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    build: ./shop-backend
+    image: maven:3.9-eclipse-temurin-21
     container_name: shop-backend
+    working_dir: /app
     depends_on:
       - postgres
+    volumes:
+      - ./shop-backend:/app
+      - maven-cache:/root/.m2
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/shop
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    command: mvn spring-boot:run
     ports:
       - "8080:8080"
 
@@ -38,3 +43,4 @@ services:
 
 volumes:
   pgdata:
+  maven-cache:
