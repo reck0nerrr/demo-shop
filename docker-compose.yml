@@ -26,6 +26,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION_MS: 86400000
+      CORS_ALLOWED_ORIGINS: http://localhost:5173
     command: mvn spring-boot:run
     ports:
       - "8080:8080"
@@ -40,7 +41,6 @@ services:
       - backend
     ports:
       - "5173:80"
-
 volumes:
   pgdata:
   maven-cache:

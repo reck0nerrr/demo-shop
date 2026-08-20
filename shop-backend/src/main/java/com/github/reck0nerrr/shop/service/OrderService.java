@@ -37,7 +37,7 @@ public class OrderService {
                 .build();
 
         List<OrderItem> orderItems = new ArrayList<>();
-
+        BigDecimal total = BigDecimal.ZERO;
         for (OrderItemRequest line : request.getItems()) {
             if (line.getQuantity() == null || line.getQuantity() <= 0) {
                 throw new IllegalArgumentException("Quantity must be positive for item " + line.getItemId());
@@ -60,9 +60,11 @@ public class OrderService {
                     .build();
 
             orderItems.add(orderItem);
+            total = total.add(item.getPrice().multiply(BigDecimal.valueOf(line.getQuantity())));
         }
 
         order.setOrderItems(orderItems);
+        order.setTotal(total);
         Order saved = orderRepository.save(order);
 
         return toResponse(saved);
@@ -109,17 +111,13 @@ public class OrderService {
                         .build())
                 .toList();
 
-        BigDecimal total = order.getOrderItems().stream()
-                .map(oi -> oi.getPrice().multiply(BigDecimal.valueOf(oi.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         return OrderResponse.builder()
                 .id(order.getId())
                 .userId(order.getUser().getId())
                 .status(order.getStatus())
                 .createdAt(order.getCreatedAt())
                 .items(items)
-                .total(total)
+                .total(order.getTotal())
                 .build();
     }
 }
