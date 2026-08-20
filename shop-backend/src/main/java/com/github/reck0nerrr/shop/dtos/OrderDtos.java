@@ -1,6 +1,9 @@
 package com.github.reck0nerrr.shop.dtos;
 
 import com.github.reck0nerrr.shop.entity.OrderStatus;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -16,6 +19,7 @@ public class OrderDtos {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class CreateOrderRequest {
+        @NotEmpty
         private List<OrderItemRequest> items;
     }
 

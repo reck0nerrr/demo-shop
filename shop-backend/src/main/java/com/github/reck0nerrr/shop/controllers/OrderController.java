@@ -3,6 +3,8 @@ package com.github.reck0nerrr.shop.controllers;
 import com.github.reck0nerrr.shop.dtos.OrderDtos.*;
 import com.github.reck0nerrr.shop.security.UserPrincipal;
 import com.github.reck0nerrr.shop.service.OrderService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponse> create(
+            @Valid
             @RequestBody CreateOrderRequest request,
             @AuthenticationPrincipal UserPrincipal principal
     ) {
@@ -49,6 +52,7 @@ public class OrderController {
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateStatus(
+            @Valid
             @PathVariable Long id,
             @RequestBody UpdateOrderStatusRequest request
     ) {

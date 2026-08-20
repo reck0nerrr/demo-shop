@@ -29,7 +29,7 @@ public class UserService {
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
-                .passwordHash(request.getPasswordHash())
+                .passwordHash(request.getPassword())
                 .build();
 
         return toResponse(userRepository.save(user));
