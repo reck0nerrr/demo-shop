@@ -33,7 +33,7 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ItemResponse> update(@Valid @PathVariable Long id, @RequestBody ItemRequest request) {
+    public ResponseEntity<ItemResponse> update(@PathVariable Long id, @Valid @RequestBody ItemRequest request) {
         return ResponseEntity.ok(itemService.update(id, request));
     }
 

@@ -2,8 +2,10 @@ package com.github.reck0nerrr.shop.dtos;
 
 import com.github.reck0nerrr.shop.entity.OrderStatus;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -13,18 +15,23 @@ public class OrderDtos {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class OrderItemRequest {
+        @NotNull
         private Long itemId;
+        @NotNull
+        @Positive
         private Integer quantity;
     }
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class CreateOrderRequest {
         @NotEmpty
+        @Valid
         private List<OrderItemRequest> items;
     }
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class UpdateOrderStatusRequest {
+        @NotNull
         private OrderStatus status;
     }
 
