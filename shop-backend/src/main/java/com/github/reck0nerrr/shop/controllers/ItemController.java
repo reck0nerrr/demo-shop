@@ -1,4 +1,4 @@
-package com.github.reck0nerrr.shop.service.controllers;
+package com.github.reck0nerrr.shop.controllers;
 
 import com.github.reck0nerrr.shop.dtos.ItemDtos.*;
 import com.github.reck0nerrr.shop.service.ItemService;

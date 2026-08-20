@@ -1,11 +1,14 @@
 package com.github.reck0nerrr.shop.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.github.reck0nerrr.shop.entity.*;
 import com.github.reck0nerrr.shop.repositories.OrderRepository;
-import com.github.reck0nerrr.shop.dtos.*;
+import com.github.reck0nerrr.shop.security.SecurityUtils;
+import com.github.reck0nerrr.shop.security.UserPrincipal;
 import com.github.reck0nerrr.shop.dtos.OrderDtos.*;
 
 import java.math.BigDecimal;
@@ -21,12 +24,12 @@ public class OrderService {
     private final ItemService itemService;
 
     @Transactional
-    public OrderResponse createOrder(CreateOrderRequest request) {
+    public OrderResponse createOrder(CreateOrderRequest request, Long currentUserId) {
         if (request.getItems() == null || request.getItems().isEmpty()) {
             throw new IllegalArgumentException("Order must contain at least one item");
         }
 
-        User user = userService.findUserOrThrow(request.getUserId());
+        User user = userService.findUserOrThrow(currentUserId);
 
         Order order = Order.builder()
                 .user(user)
@@ -66,7 +69,11 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse getById(Long id) {
+    public OrderResponse getById(Long id, UserPrincipal currentUser) {
+        Order order = findOrderOrThrow(id);
+        if (!order.getUser().getId().equals(currentUser.getId()) && !SecurityUtils.isAdmin(currentUser)) {
+            throw new AccessDeniedException("You do not have access to this order");
+        }
         return toResponse(findOrderOrThrow(id));
     }
 

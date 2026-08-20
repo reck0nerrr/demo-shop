@@ -16,7 +16,6 @@ public class OrderDtos {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class CreateOrderRequest {
-        private Long userId;
         private List<OrderItemRequest> items;
     }
 
@@ -42,4 +41,5 @@ public class OrderDtos {
         private List<OrderItemResponse> items;
         private BigDecimal total;
     }
+
 }
