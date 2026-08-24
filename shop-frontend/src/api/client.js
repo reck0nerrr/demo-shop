@@ -30,6 +30,13 @@ export const api = {
   register: (data) => request("/auth/register", { method: "POST", body: data, auth: false }),
   login: (data) => request("/auth/login", { method: "POST", body: data, auth: false }),
   getItems: () => request("/items"),
-  createOrder: (data) => request("/orders", { method: "POST", body: data }), // { items: [...] }
+  createOrder: (data) => request("/orders", { method: "POST", body: data }),
   getMyOrders: () => request("/orders"),
+
+  adminGetOrders: () => request("/orders/all"),
+  adminUpdateOrderStatus: (id, status) => request(`/orders/${id}/status`, { method: "PATCH", body: { status } }),
+  adminCreateItem: (data) => request("/items", { method: "POST", body: data }),
+  adminUpdateItem: (id, data) => request(`/items/${id}`, { method: "PUT", body: data }),
+  adminDeleteItem: (id) => request(`/items/${id}`, { method: "DELETE" }),
+  adminGetUsers: () => request("/users"),
 };

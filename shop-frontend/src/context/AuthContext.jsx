@@ -8,10 +8,10 @@ export function AuthProvider({ children }) {
     return stored ? JSON.parse(stored) : null;
   });
 
-  function login({ token, userId, username }) {
+  function login({ token, userId, username, role }) {
     localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify({ userId, username }));
-    setUser({ userId, username });
+    localStorage.setItem("user", JSON.stringify({ userId, username, role }));
+    setUser({ userId, username, role });
   }
 
   function logout() {

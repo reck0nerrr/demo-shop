@@ -24,6 +24,7 @@ public class ItemService {
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .stockQuantity(request.getStockQuantity() != null ? request.getStockQuantity() : 0)
+                .imageUrl(request.getImageUrl())
                 .build();
         return toResponse(itemRepository.save(item));
     }
@@ -44,6 +45,7 @@ public class ItemService {
         item.setName(request.getName());
         item.setDescription(request.getDescription());
         item.setPrice(request.getPrice());
+        item.setImageUrl(request.getImageUrl());
         if (request.getStockQuantity() != null) {
             item.setStockQuantity(request.getStockQuantity());
         }
@@ -70,6 +72,7 @@ public class ItemService {
                 .description(item.getDescription())
                 .price(item.getPrice())
                 .stockQuantity(item.getStockQuantity())
+                .imageUrl(item.getImageUrl())
                 .createdAt(item.getCreatedAt())
                 .build();
     }

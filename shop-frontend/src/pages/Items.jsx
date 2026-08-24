@@ -42,14 +42,16 @@ export default function Items() {
       <div className="item-grid">
         {items.map((item) => (
           <div className="item-card" key={item.id}>
+            <div className="item-image">
+              {item.imageUrl
+                ? <img src={item.imageUrl} alt={item.name} />
+                : <div className="item-image-placeholder">{item.name.charAt(0)}</div>}
+            </div>
             <h3>{item.name}</h3>
             <p className="muted">{item.description}</p>
             <div className="item-footer">
               <span className="price">${item.price.toFixed(2)}</span>
-              <button
-                onClick={() => addItem(item)}
-                disabled={item.stockQuantity === 0}
-              >
+              <button onClick={() => addItem(item)} disabled={item.stockQuantity === 0}>
                 {item.stockQuantity === 0 ? "Out of stock" : "Add"}
               </button>
             </div>

@@ -1,0 +1,16 @@
+INSERT INTO items (name, description, price, stock_quantity, image_url, created_at) VALUES
+('Adidas Samba OG', 'Timeless leather sneaker featuring the iconic 3-Stripes and a low-profile gum sole. A reigning classic.', 100.00, 45, NULL, CURRENT_TIMESTAMP),
+('Puma Speedcat OG', 'Streamlined, low-profile motorsport silhouette featuring premium suede and ultra-flat rubber sole.', 110.00, 30, NULL, CURRENT_TIMESTAMP),
+('Onitsuka Tiger Mexico 66', 'Heritage low-profile runner with signature stripes and premium leather craftsmanship.', 130.00, 25, NULL, CURRENT_TIMESTAMP),
+('Adidas Handball Spezial', 'Vintage suede indoor sports classic transformed into a staple urban lifestyle shoe.', 110.00, 40, NULL, CURRENT_TIMESTAMP),
+('Nike Zoom Vomero 5', 'Tech-focused Y2K runner designed with breathable mesh panels and responsive Zoom Air cushioning.', 160.00, 35, NULL, CURRENT_TIMESTAMP),
+('ASICS GEL-Kayano 14', 'Retro-futuristic running silhouette with synthetic leather overlays and GEL technology shock absorption.', 150.00, 20, NULL, CURRENT_TIMESTAMP),
+('New Balance 2002R', 'Premium mesh and suede lifestyle runner equipped with N-ergy shock-absorbing outsoles.', 145.00, 50, NULL, CURRENT_TIMESTAMP),
+('ASICS GEL-1130', 'Late 2000s performance runner aesthetic updated for lightweight everyday comfort.', 95.00, 60, NULL, CURRENT_TIMESTAMP),
+('Salomon XT-6', 'High-performance trail sneaker featuring Quicklace system, EVA cushioning, and bold technical accents.', 200.00, 15, NULL, CURRENT_TIMESTAMP),
+('New Balance 9060', 'Futuristic, exaggerated silhouette blending heritage 990-series details with sculpted pod midsoles.', 150.00, 28, NULL, CURRENT_TIMESTAMP),
+('Hoka Clifton 9', 'Ultra-cushioned maximum performance daily runner built for smooth, lightweight strides.', 145.00, 40, NULL, CURRENT_TIMESTAMP),
+('Nike Dunk Low Retro', 'Classic 1980s basketball-turned-skate silhouette featuring crisp leather upper color-blocking.', 115.00, 55, NULL, CURRENT_TIMESTAMP),
+('Vans Classic Slip-On', 'Iconic canvas slip-on shoe featuring low-profile upper, elastic side accents, and signature waffle sole.', 65.00, 75, NULL, CURRENT_TIMESTAMP),
+('New Balance 550', 'Streamlined retro basketball low-top crafted with heavy-duty leather and vintage rubber soles.', 110.00, 35, NULL, CURRENT_TIMESTAMP),
+('Converse Chuck Taylor All Star 70 High', 'Re-engineered heritage high-top sneaker featuring heavier canvas, vintage stitching, and elevated comfort.', 90.00, 50, NULL, CURRENT_TIMESTAMP);

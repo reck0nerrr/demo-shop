@@ -7,6 +7,7 @@ import java.time.Instant;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,8 @@ public class ItemDtos {
         @NotNull
         @Min(value = 0)
         private Integer stockQuantity;
+        @Size(max = 500)
+        private String imageUrl;
     }
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -35,6 +38,7 @@ public class ItemDtos {
         private String description;
         private BigDecimal price;
         private Integer stockQuantity;
+        private String imageUrl;
         private Instant createdAt;
     }
 }

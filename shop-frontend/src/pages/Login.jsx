@@ -17,7 +17,7 @@ export default function Login() {
     try {
       const res = await api.login(form);
       login(res);
-      navigate("/");
+      navigate(res.role === "ADMIN" ? "/admin" : "/");
     } catch (err) {
       setError("Invalid username or password");
     } finally {

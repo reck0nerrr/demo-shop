@@ -3,6 +3,7 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'USER',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -12,6 +13,7 @@ CREATE TABLE items (
     description TEXT,
     price NUMERIC(12, 2) NOT NULL CHECK (price >= 0),
     stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
+    image_url VARCHAR(500),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -44,6 +46,19 @@ CREATE TABLE order_item (
         FOREIGN KEY (item_id)
         REFERENCES items(id)
 );
+CREATE TABLE item_images (
+    id BIGSERIAL PRIMARY KEY,
+    item_id BIGINT NOT NULL,
+    image_url VARCHAR(500) NOT NULL,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT fk_item_images_item
+        FOREIGN KEY (item_id)
+        REFERENCES items(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX idx_item_images_item_id ON item_images(item_id);
 
 CREATE INDEX idx_orders_user_id
     ON orders(user_id);

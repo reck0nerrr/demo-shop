@@ -6,11 +6,26 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Items from "./pages/Items";
 import Orders from "./pages/Orders";
+import Admin from "./pages/Admin";
 import "./index.css";
 
 function RequireAuth({ children }) {
   const { user } = useAuth();
   return user ? children : <Navigate to="/login" replace />;
+}
+
+function RequireAdmin({ children }) {
+  const { user } = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  if (user.role !== "ADMIN") return <Navigate to="/" replace />;
+  return children;
+}
+
+// Admins have no business browsing the storefront — bounce them to their dashboard.
+function BlockAdmin({ children }) {
+  const { user } = useAuth();
+  if (user?.role === "ADMIN") return <Navigate to="/admin" replace />;
+  return children;
 }
 
 function AppRoutes() {
@@ -19,15 +34,25 @@ function AppRoutes() {
       <Navbar />
       <main className="container">
         <Routes>
-          <Route path="/" element={<Items />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<BlockAdmin><Items /></BlockAdmin>} />
+          <Route path="/login" element={<BlockAdmin><Login /></BlockAdmin>} />
+          <Route path="/register" element={<BlockAdmin><Register /></BlockAdmin>} />
           <Route
             path="/orders"
             element={
-              <RequireAuth>
-                <Orders />
-              </RequireAuth>
+              <BlockAdmin>
+                <RequireAuth>
+                  <Orders />
+                </RequireAuth>
+              </BlockAdmin>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <RequireAdmin>
+                <Admin />
+              </RequireAdmin>
             }
           />
         </Routes>
