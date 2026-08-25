@@ -6,6 +6,8 @@ import ImageCarousel from "../components/ImageCarousel";
 import Pager from "../components/Pager";
 
 export default function Items() {
+  const [searchInput, setSearchInput] = useState("");
+  const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
   const [pageData, setPageData] = useState({ content: [], totalPages: 1 });
   const [loading, setLoading] = useState(true);
@@ -14,14 +16,23 @@ export default function Items() {
   const { user } = useAuth();
   const { lines, addItem, setQuantity, clear, total } = useCart();
 
+  // debounce: wait for typing to pause before firing a request
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setQuery(searchInput);
+      setPage(0);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
   useEffect(() => {
     setLoading(true);
     api
-      .getItems(page)
+      .getItems(page, 12, query)
       .then(setPageData)
       .catch(() => setError("Couldn't load items"))
       .finally(() => setLoading(false));
-  }, [page]);
+  }, [page, query]);
 
   async function checkout() {
     if (!user) return;
@@ -38,28 +49,45 @@ export default function Items() {
     }
   }
 
-  if (loading) return <p className="muted">Loading items…</p>;
-  if (error) return <p className="error">{error}</p>;
-
   return (
     <div className="items-layout">
       <div>
-        <div className="item-grid">
-          {pageData.content.map((item) => (
-            <div className="item-card" key={item.id}>
-              <ImageCarousel images={item.imageUrls} alt={item.name} />
-              <h3>{item.name}</h3>
-              <p className="muted">{item.description}</p>
-              <div className="item-footer">
-                <span className="price">${item.price.toFixed(2)}</span>
-                <button onClick={() => addItem(item)} disabled={item.stockQuantity === 0}>
-                  {item.stockQuantity === 0 ? "Out of stock" : "Add"}
-                </button>
-              </div>
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search items…"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+
+        {loading ? (
+          <p className="muted">Loading items…</p>
+        ) : error ? (
+          <p className="error">{error}</p>
+        ) : pageData.content.length === 0 ? (
+          <p className="muted">
+            {query ? `No items match "${query}".` : "No items yet."}
+          </p>
+        ) : (
+          <>
+            <div className="item-grid">
+              {pageData.content.map((item) => (
+                <div className="item-card" key={item.id}>
+                  <ImageCarousel images={item.imageUrls} alt={item.name} />
+                  <h3>{item.name}</h3>
+                  <p className="muted">{item.description}</p>
+                  <div className="item-footer">
+                    <span className="price">${item.price.toFixed(2)}</span>
+                    <button onClick={() => addItem(item)} disabled={item.stockQuantity === 0}>
+                      {item.stockQuantity === 0 ? "Out of stock" : "Add"}
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <Pager page={page} totalPages={pageData.totalPages} onChange={setPage} />
+            <Pager page={page} totalPages={pageData.totalPages} onChange={setPage} />
+          </>
+        )}
       </div>
 
       {lines.length > 0 && (

@@ -29,7 +29,11 @@ async function request(path, { method = "GET", body, auth = true } = {}) {
 export const api = {
   register: (data) => request("/auth/register", { method: "POST", body: data, auth: false }),
   login: (data) => request("/auth/login", { method: "POST", body: data, auth: false }),
-  getItems: (page = 0, size = 12) => request(`/items?page=${page}&size=${size}`),
+  getItems: (page = 0, size = 12, q = "") => {
+    const params = new URLSearchParams({ page, size });
+    if (q) params.set("q", q);
+    return request(`/items?${params.toString()}`);
+  },
   createOrder: (data) => request("/orders", { method: "POST", body: data }),
   getMyOrders: () => request("/orders"),
 

@@ -34,7 +34,12 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<PageResponse<ItemResponse>> getAll(
-        @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+            @RequestParam(required = false) String q,
+            @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        if (q != null && !q.isBlank()) {
+            return ResponseEntity.ok(itemService.search(q.trim(), pageable));
+        }
         return ResponseEntity.ok(itemService.getAll(pageable));
     }
 

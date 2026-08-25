@@ -43,7 +43,10 @@ public class ItemService {
     public PageResponse<ItemResponse> getAll(Pageable pageable) {
         return PageResponse.of(itemRepository.findAll(pageable).map(this::toResponse));
     }
-
+    @Transactional(readOnly = true)
+    public PageResponse<ItemResponse> search(String query, Pageable pageable) {
+        return PageResponse.of(itemRepository.search(query, pageable).map(this::toResponse));
+    }
     @Transactional
     public ItemResponse update(Long id, ItemRequest request) {
         Item item = findItemOrThrow(id);

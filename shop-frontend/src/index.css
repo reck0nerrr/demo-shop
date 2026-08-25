@@ -493,3 +493,17 @@ input:focus {
   margin-top: 24px;
 }
 .pager-count { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.search-bar {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 15px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.search-bar:focus {
+  outline: none;
+  border-color: var(--accent);
+}
