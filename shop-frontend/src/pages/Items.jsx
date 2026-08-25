@@ -3,8 +3,11 @@ import { api } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import ImageCarousel from "../components/ImageCarousel";
+import Pager from "../components/Pager";
+
 export default function Items() {
-  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageData, setPageData] = useState({ content: [], totalPages: 1 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [placing, setPlacing] = useState(false);
@@ -12,12 +15,13 @@ export default function Items() {
   const { lines, addItem, setQuantity, clear, total } = useCart();
 
   useEffect(() => {
+    setLoading(true);
     api
-      .getItems()
-      .then(setItems)
+      .getItems(page)
+      .then(setPageData)
       .catch(() => setError("Couldn't load items"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [page]);
 
   async function checkout() {
     if (!user) return;
@@ -39,20 +43,23 @@ export default function Items() {
 
   return (
     <div className="items-layout">
-      <div className="item-grid">
-        {items.map((item) => (
-          <div className="item-card" key={item.id}>
-            <ImageCarousel images={item.imageUrls} alt={item.name} />
-            <h3>{item.name}</h3>
-            <p className="muted">{item.description}</p>
-            <div className="item-footer">
-              <span className="price">${item.price.toFixed(2)}</span>
-              <button onClick={() => addItem(item)} disabled={item.stockQuantity === 0}>
-                {item.stockQuantity === 0 ? "Out of stock" : "Add"}
-              </button>
+      <div>
+        <div className="item-grid">
+          {pageData.content.map((item) => (
+            <div className="item-card" key={item.id}>
+              <ImageCarousel images={item.imageUrls} alt={item.name} />
+              <h3>{item.name}</h3>
+              <p className="muted">{item.description}</p>
+              <div className="item-footer">
+                <span className="price">${item.price.toFixed(2)}</span>
+                <button onClick={() => addItem(item)} disabled={item.stockQuantity === 0}>
+                  {item.stockQuantity === 0 ? "Out of stock" : "Add"}
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <Pager page={page} totalPages={pageData.totalPages} onChange={setPage} />
       </div>
 
       {lines.length > 0 && (

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
+import Pager from "../components/Pager";
 
 const TABS = ["items", "orders", "users"];
 const STATUSES = ["PENDING", "PAID", "SHIPPED", "CANCELLED"];
@@ -29,7 +30,12 @@ export default function Admin() {
 }
 
 function ItemsAdmin() {
-  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(0);
+  const [pageData, setPageData] = useState({
+    content: [],
+    totalPages: 1,
+  });
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -50,15 +56,15 @@ function ItemsAdmin() {
     setError(null);
 
     api
-      .getItems()
-      .then(setItems)
+      .getItems(page, 10)
+      .then(setPageData)
       .catch(() => setError("Couldn't load items"))
       .finally(() => setLoading(false));
   }
 
   useEffect(() => {
     load();
-  }, []);
+  }, [page]);
 
   function startCreate() {
     setEditingId(null);
@@ -150,6 +156,7 @@ function ItemsAdmin() {
 
       setShowForm(false);
       setEditingId(null);
+
       setForm({
         name: "",
         description: "",
@@ -348,7 +355,7 @@ function ItemsAdmin() {
         </thead>
 
         <tbody>
-          {items.map((item) => (
+          {pageData.content.map((item) => (
             <tr key={item.id}>
               <td>
                 {item.imageUrls &&
@@ -394,6 +401,12 @@ function ItemsAdmin() {
           ))}
         </tbody>
       </table>
+
+      <Pager
+        page={page}
+        totalPages={pageData.totalPages}
+        onChange={setPage}
+      />
     </div>
   );
 }

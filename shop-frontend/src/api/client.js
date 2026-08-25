@@ -29,7 +29,7 @@ async function request(path, { method = "GET", body, auth = true } = {}) {
 export const api = {
   register: (data) => request("/auth/register", { method: "POST", body: data, auth: false }),
   login: (data) => request("/auth/login", { method: "POST", body: data, auth: false }),
-  getItems: () => request("/items"),
+  getItems: (page = 0, size = 12) => request(`/items?page=${page}&size=${size}`),
   createOrder: (data) => request("/orders", { method: "POST", body: data }),
   getMyOrders: () => request("/orders"),
 

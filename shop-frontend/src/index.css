@@ -485,3 +485,11 @@ input:focus {
   padding: 1px 5px;
   border-radius: 999px;
 }
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.pager-count { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }

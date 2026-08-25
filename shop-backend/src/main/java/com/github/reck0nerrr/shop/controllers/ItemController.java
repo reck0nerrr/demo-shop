@@ -1,16 +1,19 @@
 package com.github.reck0nerrr.shop.controllers;
 
+import com.github.reck0nerrr.shop.dtos.PageResponse;
 import com.github.reck0nerrr.shop.dtos.ItemDtos.*;
 import com.github.reck0nerrr.shop.service.ItemService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-
+import org.springframework.data.domain.Sort;
 @RestController
 @RequestMapping("/api/items")
 @RequiredArgsConstructor
@@ -30,8 +33,9 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponse>> getAll() {
-        return ResponseEntity.ok(itemService.getAll());
+    public ResponseEntity<PageResponse<ItemResponse>> getAll(
+        @PageableDefault(size = 12, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(itemService.getAll(pageable));
     }
 
     @PutMapping("/{id}")

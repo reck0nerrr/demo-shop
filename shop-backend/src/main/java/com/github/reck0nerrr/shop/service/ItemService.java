@@ -1,9 +1,12 @@
 package com.github.reck0nerrr.shop.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.reck0nerrr.shop.dtos.PageResponse;
 import com.github.reck0nerrr.shop.dtos.ItemDtos.ItemRequest;
 import com.github.reck0nerrr.shop.dtos.ItemDtos.ItemResponse;
 import com.github.reck0nerrr.shop.entity.Item;
@@ -37,8 +40,8 @@ public class ItemService {
     }
 
     @Transactional(readOnly = true)
-    public List<ItemResponse> getAll() {
-        return itemRepository.findAll().stream().map(this::toResponse).toList();
+    public PageResponse<ItemResponse> getAll(Pageable pageable) {
+        return PageResponse.of(itemRepository.findAll(pageable).map(this::toResponse));
     }
 
     @Transactional
