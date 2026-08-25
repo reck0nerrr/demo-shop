@@ -2,6 +2,8 @@ package com.github.reck0nerrr.shop.entity;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,11 +35,13 @@ public class Item {
     @Builder.Default
     private Integer stockQuantity = 0;
 
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sortOrder ASC")
+    @Builder.Default
+    private List<ItemImage> images = new ArrayList<>();
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    @Column(name = "image_url", length = 500)
-    private String imageUrl;
 }
 

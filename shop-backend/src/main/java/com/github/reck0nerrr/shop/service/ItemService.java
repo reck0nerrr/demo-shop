@@ -7,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.reck0nerrr.shop.dtos.ItemDtos.ItemRequest;
 import com.github.reck0nerrr.shop.dtos.ItemDtos.ItemResponse;
 import com.github.reck0nerrr.shop.entity.Item;
+import com.github.reck0nerrr.shop.entity.ItemImage;
 import com.github.reck0nerrr.shop.repositories.ItemRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,8 +26,8 @@ public class ItemService {
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .stockQuantity(request.getStockQuantity() != null ? request.getStockQuantity() : 0)
-                .imageUrl(request.getImageUrl())
                 .build();
+        item.setImages(buildImages(item, request.getImageUrls()));
         return toResponse(itemRepository.save(item));
     }
 
@@ -45,10 +47,11 @@ public class ItemService {
         item.setName(request.getName());
         item.setDescription(request.getDescription());
         item.setPrice(request.getPrice());
-        item.setImageUrl(request.getImageUrl());
         if (request.getStockQuantity() != null) {
             item.setStockQuantity(request.getStockQuantity());
         }
+        item.getImages().clear();
+        item.getImages().addAll(buildImages(item, request.getImageUrls()));
         return toResponse(item);
     }
 
@@ -65,14 +68,29 @@ public class ItemService {
                 .orElseThrow(() -> new IllegalArgumentException("Item not found: " + id));
     }
 
+    private List<ItemImage> buildImages(Item item, List<String> urls) {
+        List<ItemImage> images = new ArrayList<>();
+        if (urls == null) return images;
+
+        int order = 0;
+        for (String url : urls) {
+            if (url == null || url.isBlank()) continue;
+            images.add(ItemImage.builder().item(item).imageUrl(url).sortOrder(order++).build());
+        }
+        return images;
+    }
+        
     private ItemResponse toResponse(Item item) {
+        List<String> imageUrls = item.getImages().stream()
+                .map(ItemImage::getImageUrl)
+                .toList();
         return ItemResponse.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .price(item.getPrice())
                 .stockQuantity(item.getStockQuantity())
-                .imageUrl(item.getImageUrl())
+                .imageUrls(imageUrls)
                 .createdAt(item.getCreatedAt())
                 .build();
     }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
-
+import ImageCarousel from "../components/ImageCarousel";
 export default function Items() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,11 +42,7 @@ export default function Items() {
       <div className="item-grid">
         {items.map((item) => (
           <div className="item-card" key={item.id}>
-            <div className="item-image">
-              {item.imageUrl
-                ? <img src={item.imageUrl} alt={item.name} />
-                : <div className="item-image-placeholder">{item.name.charAt(0)}</div>}
-            </div>
+            <ImageCarousel images={item.imageUrls} alt={item.name} />
             <h3>{item.name}</h3>
             <p className="muted">{item.description}</p>
             <div className="item-footer">

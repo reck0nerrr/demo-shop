@@ -4,6 +4,7 @@ package com.github.reck0nerrr.shop.dtos;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -27,8 +28,8 @@ public class ItemDtos {
         @NotNull
         @Min(value = 0)
         private Integer stockQuantity;
-        @Size(max = 500)
-        private String imageUrl;
+        
+        private List<String> imageUrls;
     }
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
@@ -38,7 +39,7 @@ public class ItemDtos {
         private String description;
         private BigDecimal price;
         private Integer stockQuantity;
-        private String imageUrl;
+        private List<String> imageUrls;
         private Instant createdAt;
     }
 }
