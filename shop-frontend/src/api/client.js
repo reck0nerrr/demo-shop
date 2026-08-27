@@ -1,5 +1,4 @@
-const API_BASE = "http://localhost:8080/api";
-
+const API_BASE = import.meta.env.VITE_API_URL;
 function getToken() {
   return localStorage.getItem("token");
 }
@@ -43,4 +42,10 @@ export const api = {
   adminUpdateItem: (id, data) => request(`/items/${id}`, { method: "PUT", body: data }),
   adminDeleteItem: (id) => request(`/items/${id}`, { method: "DELETE" }),
   adminGetUsers: () => request("/users"),
+  getCart: () => request("/cart"),
+  addCartItem: (itemId, quantity) => request("/cart/items", { method: "POST", body: { itemId, quantity } }),
+  updateCartItem: (itemId, quantity) => request(`/cart/items/${itemId}`, { method: "PATCH", body: { quantity } }),
+  removeCartItem: (itemId) => request(`/cart/items/${itemId}`, { method: "DELETE" }),
+  clearCart: () => request("/cart", { method: "DELETE" }),
+  checkout: () => request("/orders", { method: "POST" }),
 };

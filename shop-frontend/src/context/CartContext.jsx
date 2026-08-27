@@ -1,41 +1,77 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { api } from "../api/client";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
-  const [lines, setLines] = useState([]); // [{ item, quantity }]
+  const { user } = useAuth();
+  const [cart, setCart] = useState({ items: [], total: 0 });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  function addItem(item) {
-    setLines((prev) => {
-      const existing = prev.find((l) => l.item.id === item.id);
-      if (existing) {
-        return prev.map((l) =>
-          l.item.id === item.id ? { ...l, quantity: l.quantity + 1 } : l
-        );
-      }
-      return [...prev, { item, quantity: 1 }];
-    });
+  const refresh = useCallback(() => {
+    if (!user) {
+      setCart({ items: [], total: 0 });
+      return Promise.resolve();
+    }
+    setLoading(true);
+    return api
+      .getCart()
+      .then(setCart)
+      .catch((err) => setError(err.message || "Couldn't load cart"))
+      .finally(() => setLoading(false));
+  }, [user]);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  async function addItem(itemId, quantity = 1) {
+    setError(null);
+    try {
+      setCart(await api.addCartItem(itemId, quantity));
+    } catch (err) {
+      setError(err.message || "Couldn't add item");
+      throw err;
+    }
   }
 
-  function setQuantity(itemId, quantity) {
-    setLines((prev) =>
-      quantity <= 0
-        ? prev.filter((l) => l.item.id !== itemId)
-        : prev.map((l) => (l.item.id === itemId ? { ...l, quantity } : l))
-    );
+  async function setQuantity(itemId, quantity) {
+    setError(null);
+    try {
+      setCart(await api.updateCartItem(itemId, quantity));
+    } catch (err) {
+      setError(err.message || "Couldn't update quantity");
+      throw err;
+    }
   }
 
-  function clear() {
-    setLines([]);
+  async function removeItem(itemId) {
+    setError(null);
+    try {
+      setCart(await api.removeCartItem(itemId));
+    } catch (err) {
+      setError(err.message || "Couldn't remove item");
+      throw err;
+    }
   }
 
-  const total = useMemo(
-    () => lines.reduce((sum, l) => sum + l.item.price * l.quantity, 0),
-    [lines]
-  );
+  async function clear() {
+    setError(null);
+    try {
+      await api.clearCart();
+      setCart({ items: [], total: 0 });
+    } catch (err) {
+      setError(err.message || "Couldn't clear cart");
+      throw err;
+    }
+  }
+
+  const itemCount = cart.items.reduce((sum, l) => sum + l.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ lines, addItem, setQuantity, clear, total }}>
+    <CartContext.Provider value={{ cart, loading, error, itemCount, addItem, setQuantity, removeItem, clear, refresh }}>
       {children}
     </CartContext.Provider>
   );

@@ -8,6 +8,7 @@ import Items from "./pages/Items";
 import Orders from "./pages/Orders";
 import Admin from "./pages/Admin";
 import "./index.css";
+import Cart from "./pages/Cart";
 
 function RequireAuth({ children }) {
   const { user } = useAuth();
@@ -53,6 +54,16 @@ function AppRoutes() {
               <RequireAdmin>
                 <Admin />
               </RequireAdmin>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <BlockAdmin>
+                <RequireAuth>
+                  <Cart />
+                </RequireAuth>
+              </BlockAdmin>
             }
           />
         </Routes>

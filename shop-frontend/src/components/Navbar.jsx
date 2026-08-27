@@ -4,9 +4,8 @@ import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
-  const { lines } = useCart();
+  const { itemCount } = useCart();
   const isAdmin = user?.role === "ADMIN";
-  const itemCount = lines.reduce((sum, l) => sum + l.quantity, 0);
 
   return (
     <header className="navbar">
@@ -18,9 +17,9 @@ export default function Navbar() {
           <>
             <Link to="/">Browse</Link>
             {user && <Link to="/orders">Orders</Link>}
+            {user && <Link to="/cart">Cart{itemCount > 0 ? ` (${itemCount})` : ""}</Link>}
           </>
         )}
-        {!isAdmin && itemCount > 0 && <span className="cart-badge">{itemCount} in cart</span>}
       </nav>
       <div className="auth-actions">
         {user ? (

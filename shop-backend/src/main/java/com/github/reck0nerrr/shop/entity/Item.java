@@ -7,6 +7,8 @@ import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -37,6 +39,7 @@ public class Item {
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
+    @BatchSize(size = 20)
     @Builder.Default
     private List<ItemImage> images = new ArrayList<>();
 

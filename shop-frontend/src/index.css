@@ -507,3 +507,51 @@ input:focus {
   outline: none;
   border-color: var(--accent);
 }
+.cart-page { max-width: 760px; margin: 0 auto; }
+.cart-page h1 { font-size: 24px; margin-bottom: 24px; }
+.cart-page-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+
+.cart-page-row {
+  display: grid;
+  grid-template-columns: 64px 1fr auto auto auto;
+  gap: 16px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+}
+.cart-page-image { width: 64px; height: 64px; border-radius: var(--radius); overflow: hidden; background: var(--bg); flex-shrink: 0; }
+.cart-page-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cart-page-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cart-page-info h3 { font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cart-page-qty { display: flex; align-items: center; gap: 6px; }
+.cart-page-qty button { padding: 6px 10px; }
+.cart-page-qty input { width: 48px; text-align: center; padding: 6px; font-family: var(--font-mono); }
+.cart-page-subtotal { font-weight: 500; min-width: 70px; text-align: right; }
+
+.cart-page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+}
+.cart-page-total { display: flex; align-items: baseline; gap: 8px; font-size: 15px; }
+.cart-page-total strong { font-size: 20px; }
+.cart-empty { text-align: center; padding: 60px 0; }
+.mono { font-family: var(--font-mono); }
+
+@media (max-width: 640px) {
+  .cart-page-row {
+    grid-template-columns: 56px 1fr;
+    grid-template-areas: "image info" "qty qty" "subtotal remove";
+  }
+  .cart-page-image { grid-area: image; }
+  .cart-page-info { grid-area: info; }
+  .cart-page-qty { grid-area: qty; justify-content: flex-start; }
+  .cart-page-subtotal { grid-area: subtotal; text-align: left; }
+  .cart-page-row > button.danger { grid-area: remove; justify-self: end; }
+  .cart-page-footer { flex-wrap: wrap; justify-content: space-between; }
+}

@@ -21,13 +21,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> create(
-            @Valid
-            @RequestBody CreateOrderRequest request,
-            @AuthenticationPrincipal UserPrincipal principal
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(orderService.createOrder(request, principal.getId()));
+    public ResponseEntity<OrderResponse> checkout(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.checkout(principal.getId()));
     }
 
     @GetMapping("/{id}")
