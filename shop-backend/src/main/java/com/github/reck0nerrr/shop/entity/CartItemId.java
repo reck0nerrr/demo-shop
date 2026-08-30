@@ -11,17 +11,17 @@ import java.util.Objects;
 public class CartItemId implements Serializable {
 
     private Long cartId;
-    private Long itemId;
+    private Long variantId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CartItemId that)) return false;
-        return Objects.equals(cartId, that.cartId) && Objects.equals(itemId, that.itemId);
+        return Objects.equals(cartId, that.cartId) && Objects.equals(variantId, that.variantId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartId, itemId);
+        return Objects.hash(cartId, variantId);
     }
 }

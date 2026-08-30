@@ -21,10 +21,10 @@ public class CartItem {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @MapsId("itemId")
+    @MapsId("variantId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @JoinColumn(name = "variant_id")
+    private ItemVariant itemVariant;
 
     @Column(nullable = false)
     private Integer quantity;

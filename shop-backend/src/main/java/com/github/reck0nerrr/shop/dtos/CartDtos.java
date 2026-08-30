@@ -7,13 +7,14 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public class CartDtos {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor
     public static class AddCartItemRequest {
         @NotNull
-        private Long itemId;
+        private Long variantId;
         @NotNull
         @Positive
         private Integer quantity;
@@ -28,9 +29,10 @@ public class CartDtos {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
     public static class CartItemResponse {
-        private Long itemId;
+        private Long variantId;
         private String itemName;
         private String imageUrl;
+        private Map<String, String> characteristics;
         private BigDecimal price;
         private Integer quantity;
         private Integer availableStock;

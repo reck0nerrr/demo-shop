@@ -23,10 +23,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @MapsId("itemId")
+    @MapsId("variantId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "item_id")
-    private Item item;
+    @JoinColumn(name = "variant_id")
+    private ItemVariant itemVariant;
 
     @Column(nullable = false)
     private Integer quantity;

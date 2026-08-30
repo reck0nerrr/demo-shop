@@ -10,6 +10,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 public class OrderDtos {
 
@@ -37,8 +38,9 @@ public class OrderDtos {
 
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
     public static class OrderItemResponse {
-        private Long itemId;
+        private Long variantId;
         private String itemName;
+        private Map<String, String> characteristics;
         private Integer quantity;
         private BigDecimal price;
     }
