@@ -30,6 +30,7 @@ public class CartDtos {
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
     public static class CartItemResponse {
         private Long variantId;
+        private Long itemId;
         private String itemName;
         private String imageUrl;
         private Map<String, String> characteristics;

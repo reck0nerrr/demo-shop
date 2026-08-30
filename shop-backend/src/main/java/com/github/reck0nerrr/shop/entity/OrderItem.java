@@ -26,7 +26,7 @@ public class OrderItem {
     @MapsId("variantId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "variant_id")
-    private ItemVariant itemVariant;
+    private ItemVariant variant;
 
     @Column(nullable = false)
     private Integer quantity;

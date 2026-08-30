@@ -39,6 +39,7 @@ public class OrderDtos {
     @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
     public static class OrderItemResponse {
         private Long variantId;
+        private Long itemId;
         private String itemName;
         private Map<String, String> characteristics;
         private Integer quantity;

@@ -15,6 +15,7 @@ import com.github.reck0nerrr.shop.dtos.OrderDtos.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,52 +26,7 @@ public class OrderService {
     private final ItemService itemService;
     private final CartRepository cartRepository;
 
-    @Transactional
-    public OrderResponse createOrder(CreateOrderRequest request, Long currentUserId) {
-        if (request.getItems() == null || request.getItems().isEmpty()) {
-            throw new IllegalArgumentException("Order must contain at least one item");
-        }
 
-        User user = userService.findUserOrThrow(currentUserId);
-
-        Order order = Order.builder()
-                .user(user)
-                .status(OrderStatus.PENDING)
-                .build();
-
-        List<OrderItem> orderItems = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
-        for (OrderItemRequest line : request.getItems()) {
-            if (line.getQuantity() == null || line.getQuantity() <= 0) {
-                throw new IllegalArgumentException("Quantity must be positive for item " + line.getItemId());
-            }
-
-            Item item = itemService.findItemOrThrow(line.getItemId());
-
-            if (item.getStockQuantity() < line.getQuantity()) {
-                throw new IllegalStateException("Not enough stock for item: " + item.getName());
-            }
-
-            item.setStockQuantity(item.getStockQuantity() - line.getQuantity());
-
-            OrderItem orderItem = OrderItem.builder()
-                    .id(new OrderItemId(null, item.getId()))
-                    .order(order)
-                    .item(item)
-                    .quantity(line.getQuantity())
-                    .price(item.getPrice())
-                    .build();
-
-            orderItems.add(orderItem);
-            total = total.add(item.getPrice().multiply(BigDecimal.valueOf(line.getQuantity())));
-        }
-
-        order.setOrderItems(orderItems);
-        order.setTotal(total);
-        Order saved = orderRepository.save(order);
-
-        return toResponse(saved);
-    }
 
     @Transactional(readOnly = true)
     public OrderResponse getById(Long id, UserPrincipal currentUser) {
@@ -106,8 +62,11 @@ public class OrderService {
     private OrderResponse toResponse(Order order) {
         List<OrderItemResponse> items = order.getOrderItems().stream()
                 .map(oi -> OrderItemResponse.builder()
-                        .itemId(oi.getItem().getId())
-                        .itemName(oi.getItem().getName())
+                        .variantId(oi.getVariant().getId())
+                        .itemId(oi.getVariant().getItem().getId())
+                        .itemName(oi.getVariant().getItem().getName())
+                        .characteristics(oi.getVariant().getValues().stream()
+                                .collect(Collectors.toMap(cv -> cv.getType().getName(), CharacteristicValue::getValue)))
                         .quantity(oi.getQuantity())
                         .price(oi.getPrice())
                         .build())
@@ -133,41 +92,38 @@ public class OrderService {
         }
 
         User user = userService.findUserOrThrow(userId);
-
-        Order order = Order.builder()
-                .user(user)
-                .status(OrderStatus.PENDING)
-                .build();
+        Order order = Order.builder().user(user).status(OrderStatus.PENDING).build();
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
 
         for (CartItem cartItem : cart.getItems()) {
-            Item item = cartItem.getItem();
+            ItemVariant variant = cartItem.getVariant();
             int quantity = cartItem.getQuantity();
 
-            if (quantity > item.getStockQuantity()) {
-                throw new IllegalStateException("Not enough stock for item: " + item.getName());
+            if (quantity > variant.getStockQuantity()) {
+                throw new IllegalStateException("Not enough stock for item: " + variant.getItem().getName());
             }
 
-            item.setStockQuantity(item.getStockQuantity() - quantity);
+            variant.setStockQuantity(variant.getStockQuantity() - quantity);
+            BigDecimal price = variant.effectivePrice();
 
             orderItems.add(OrderItem.builder()
-                    .id(new OrderItemId(null, item.getId()))
+                    .id(new OrderItemId(null, variant.getId()))
                     .order(order)
-                    .item(item)
+                    .variant(variant)
                     .quantity(quantity)
-                    .price(item.getPrice())
+                    .price(price)
                     .build());
 
-            total = total.add(item.getPrice().multiply(BigDecimal.valueOf(quantity)));
+            total = total.add(price.multiply(BigDecimal.valueOf(quantity)));
         }
 
         order.setOrderItems(orderItems);
         order.setTotal(total);
         Order saved = orderRepository.save(order);
 
-        cart.getItems().clear();
+        cart.getItems().clear(); // unreached if anything above threw
 
         return toResponse(saved);
     }

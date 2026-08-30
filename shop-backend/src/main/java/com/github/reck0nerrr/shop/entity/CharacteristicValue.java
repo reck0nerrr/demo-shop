@@ -15,12 +15,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CharacteristicValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @OneToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "characteristic_type_id", nullable = false)
-    private CharacteristicType characteristicType;
+    private CharacteristicType type;
     private String value;
 }

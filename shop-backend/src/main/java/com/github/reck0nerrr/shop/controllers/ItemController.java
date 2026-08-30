@@ -55,5 +55,9 @@ public class ItemController {
         itemService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+    @PutMapping("/{id}/variants")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ItemResponse> replaceVariants(@PathVariable Long id, @Valid @RequestBody UpdateVariantsRequest request) {
+        return ResponseEntity.ok(itemService.replaceVariants(id, request));
+    }
 }
