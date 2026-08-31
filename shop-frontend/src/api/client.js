@@ -46,6 +46,7 @@ export const api = {
   addCartItem: (variantId, quantity) => request("/cart/items", { method: "POST", body: { variantId, quantity } }),
   updateCartItem: (variantId, quantity) => request(`/cart/items/${variantId}`, { method: "PATCH", body: { quantity } }),
   removeCartItem: (variantId) => request(`/cart/items/${variantId}`, { method: "DELETE" }),
+  clearCart: () => request("/cart", { method: "DELETE" }),
   checkout: () => request("/orders", { method: "POST" }),
   getCharacteristicTypes: () => request("/characteristics"),
   createCharacteristicType: (name) => request("/characteristics", { method: "POST", body: { name } }),
