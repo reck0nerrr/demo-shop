@@ -41,45 +41,30 @@ export default function Cart() {
 
       <div className="cart-page-list">
         {cart.items.map((line) => (
-          <div className="cart-page-row" key={line.itemId}>
+          <div className="cart-page-row" key={line.variantId}>
             <div className="cart-page-image">
-              {line.imageUrl ? (
-                <img src={line.imageUrl} alt={line.itemName} />
-              ) : (
-                <div className="carousel-placeholder">{line.itemName.charAt(0)}</div>
-              )}
+              {line.imageUrl ? <img src={line.imageUrl} alt={line.itemName} /> : <div className="carousel-placeholder">{line.itemName.charAt(0)}</div>}
             </div>
-
             <div className="cart-page-info">
               <h3>{line.itemName}</h3>
+              {Object.keys(line.characteristics || {}).length > 0 && (
+                <span className="muted variant-label">
+                  {Object.entries(line.characteristics).map(([k, v]) => `${k}: ${v}`).join(", ")}
+                </span>
+              )}
               <span className="price mono">${line.price.toFixed(2)}</span>
               <span className="muted">{line.availableStock} in stock</span>
             </div>
-
             <div className="cart-page-qty">
-              <button className="secondary" onClick={() => setQuantity(line.itemId, line.quantity - 1)}>−</button>
+              <button className="secondary" onClick={() => setQuantity(line.variantId, line.quantity - 1)}>−</button>
               <input
-                type="number"
-                min="0"
-                max={line.availableStock}
-                value={line.quantity}
-                onChange={(e) => {
-                  const next = Math.min(Math.max(0, Number(e.target.value)), line.availableStock);
-                  setQuantity(line.itemId, next);
-                }}
+                type="number" min="0" max={line.availableStock} value={line.quantity}
+                onChange={(e) => setQuantity(line.variantId, Math.min(Math.max(0, Number(e.target.value)), line.availableStock))}
               />
-              <button
-                className="secondary"
-                disabled={line.quantity >= line.availableStock}
-                onClick={() => setQuantity(line.itemId, line.quantity + 1)}
-              >
-                +
-              </button>
+              <button className="secondary" disabled={line.quantity >= line.availableStock} onClick={() => setQuantity(line.variantId, line.quantity + 1)}>+</button>
             </div>
-
             <div className="cart-page-subtotal mono">${line.subtotal.toFixed(2)}</div>
-
-            <button className="danger" onClick={() => removeItem(line.itemId)}>Remove</button>
+            <button className="danger" onClick={() => removeItem(line.variantId)}>Remove</button>
           </div>
         ))}
       </div>

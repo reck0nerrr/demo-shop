@@ -555,3 +555,40 @@ input:focus {
   .cart-page-row > button.danger { grid-area: remove; justify-self: end; }
   .cart-page-footer { flex-wrap: wrap; justify-content: space-between; }
 }
+.variant-picker { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.variant-picker select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+
+.variant-label { display: block; margin: 2px 0; }
+
+.characteristic-type-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.value-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.value-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 999px;
+  padding: 4px 10px; font-size: 13px;
+}
+.value-chip button { background: none; padding: 0; color: var(--muted); font-size: 14px; }
+.value-chip button:hover { background: none; color: var(--error); box-shadow: none; }
+.value-add-row { display: flex; gap: 8px; }
+.value-add-row input { flex: 1; padding: 8px 10px; }
+
+.checkbox-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+.checkbox-inline { display: flex; align-items: center; gap: 6px; font-weight: 400; color: var(--ink); }
+.checkbox-inline input { width: auto; }
+
+.variants-editor {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 20px;
+}
+.variant-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+.variant-row select, .variant-row input { padding: 8px 10px; font-size: 13px; }
+.variant-row input[type="number"] { width: 100px; }

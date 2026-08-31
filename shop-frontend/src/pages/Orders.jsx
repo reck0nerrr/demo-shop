@@ -29,8 +29,12 @@ export default function Orders() {
           </div>
           <li>
             {order.items.map((line) => (
-              <li key={line.itemId}>
-                <span>{line.quantity}× {line.itemName}</span>
+              <li key={line.variantId}>
+                <span>
+                  {line.quantity}× {line.itemName}
+                  {Object.keys(line.characteristics || {}).length > 0 &&
+                    ` (${Object.values(line.characteristics).join(", ")})`}
+                </span>
                 <span>${(line.price * line.quantity).toFixed(2)}</span>
               </li>
             ))}

@@ -36,7 +36,6 @@ public class Item {
     private BigDecimal price;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("sortOrder ASC")
     @BatchSize(size = 20)
     @Builder.Default
     private List<ItemVariant> variants = new ArrayList<>();
