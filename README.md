@@ -2,6 +2,25 @@
 
 A full-stack e-commerce demo application built with Spring Boot and React.
 
+## Screenshots
+### User side 
+
+![Home](screenshots/user_page.png)
+
+![Shopping cart](screenshots/cart.png) 
+
+![User orders](screenshots/user_orders.png) 
+
+![Authentication](screenshots/auth.png) 
+
+### Admin panel 
+
+![Admin panel](screenshots/admin.png) 
+
+![Product variants](screenshots/editing_items.png)
+
+![Setting/editing characteristics](screenshots/admin_characteristics.png)
+
 Tech Stack
 
 Backend
