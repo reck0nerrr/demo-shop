@@ -1,4 +1,4 @@
-Shop
+#Shop
 
 A full-stack e-commerce demo application built with Spring Boot and React.
 
