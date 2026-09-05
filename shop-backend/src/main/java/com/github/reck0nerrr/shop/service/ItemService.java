@@ -20,6 +20,8 @@ import com.github.reck0nerrr.shop.entity.ItemVariant;
 import com.github.reck0nerrr.shop.repositories.CharacteristicTypeRepository;
 import com.github.reck0nerrr.shop.repositories.CharacteristicValueRepository;
 import com.github.reck0nerrr.shop.repositories.ItemRepository;
+import com.github.reck0nerrr.shop.repositories.OrderItemRepository;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +35,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final CharacteristicTypeRepository typeRepository;
     private final CharacteristicValueRepository valueRepository;
+    private final OrderItemRepository orderItemRepository;
     @Transactional
     public ItemResponse create(ItemRequest request) {
         Item item = Item.builder()
@@ -84,8 +87,19 @@ public class ItemService {
         Item item = findItemOrThrow(id);
         Set<Long> activeTypeIds=item.getCharacteristicTypes().stream()
             .map(CharacteristicType::getId).collect(Collectors.toSet());
+        List<Long> existingVariantIds = item.getVariants().stream()
+                .map(ItemVariant::getId).toList();
+        Set<Long> protectedVariantIds = existingVariantIds.isEmpty() ? Set.of() : new HashSet<>(orderItemRepository.findVariantIdsInUse(existingVariantIds));
         List<ItemVariant> newVariants = new ArrayList<>();
         Set<Set<Long>> seenCombinations = new HashSet<>();
+        Set<Set<Long>> protectedCombinations = new HashSet<>();
+        
+        for (ItemVariant existing : item.getVariants()) {
+            if (protectedVariantIds.contains(existing.getId())) {
+                protectedCombinations.add(existing.getValues().stream()
+                        .map(CharacteristicValue::getId).collect(Collectors.toSet()));
+            }
+        }
         for(VariantRequest vr : request.getVariants()){
             List<CharacteristicValue> values = valueRepository.findAllById(vr.getCharacteristicValueIds());
             if (values.size() != vr.getCharacteristicValueIds().size()) {
@@ -99,6 +113,9 @@ public class ItemService {
             }
 
             Set<Long> combo = values.stream().map(CharacteristicValue::getId).collect(Collectors.toSet());
+            if(protectedCombinations.contains(combo)){
+                continue;
+            }
             if (!seenCombinations.add(combo)) {
                 throw new IllegalArgumentException("Duplicate variant combination submitted");
             }
@@ -110,11 +127,10 @@ public class ItemService {
                     .values(new HashSet<>(values))
                     .build());
         }
-        if (newVariants.isEmpty()) {
+        if (newVariants.isEmpty() && protectedVariantIds.isEmpty()) {
             newVariants.add(ItemVariant.builder().item(item).stockQuantity(0).build());
         }
-
-        item.getVariants().clear();
+        item.getVariants().removeIf(v -> !protectedVariantIds.contains(v.getId()));
         item.getVariants().addAll(newVariants);
         return toResponse(item);
     }

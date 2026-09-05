@@ -21,10 +21,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody CreateUserRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(request));
-    }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")

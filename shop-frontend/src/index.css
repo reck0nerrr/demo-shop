@@ -1,4 +1,3 @@
-/* src/index.css */
 :root {
   --bg: #f6f5f2;
   --surface: #ffffff;
@@ -12,7 +11,7 @@
   --amber: #92650f;
   --blue: #2453a6;
 
-  --font-display: "Fraunces", Georgia, serif;
+  --font-display: "Lora", Georgia, serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 

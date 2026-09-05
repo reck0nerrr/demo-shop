@@ -17,24 +17,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Transactional
-    public UserResponse register(CreateUserRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new IllegalArgumentException("Username already taken");
-        }
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already registered");
-        }
-
-        User user = User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
-                .passwordHash(request.getPassword())
-                .build();
-
-        return toResponse(userRepository.save(user));
-    }
-
     @Transactional(readOnly = true)
     public UserResponse getById(Long id) {
         return toResponse(findUserOrThrow(id));
